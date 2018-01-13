@@ -12,7 +12,8 @@
   },
   "author": "Captain Crocus",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "express-handlebars": "^3.0.0"
   },
   "keywords": [
     "node",
