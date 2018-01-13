@@ -2,6 +2,9 @@
   "name": "blood-donor",
   "version": "1.0.0",
   "description": "Blood Donor DataBase",
+  "engines": {
+    "node": "8.9.1"
+  },
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
