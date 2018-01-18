@@ -5,10 +5,10 @@ const handlebars = require('express-handlebars').create({
 });
 var mongoose = require('mongoose');
 
+var credentials = require('./conf/credentials');
+
 var person = require('./controllers/person');
 var gui = require('./controllers/gui');
-
-var credentials = require('./conf/credentials');
 
 var app = express();
 
