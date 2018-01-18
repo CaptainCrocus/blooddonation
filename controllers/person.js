@@ -4,16 +4,7 @@ var router = express.Router();
 const { check, validationResult } = require('express-validator/check');
 const { matchedData, sanitize } = require('express-validator/filter');
 
-var mongoose = require('mongoose');
 var Person = require('../models/person');
-
-const connectionString = "mongodb://localhost:27017/blooddonor";
-
-mongoose.connect(connectionString, { useMongoClient: true });
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', console.log.bind(console, 'connection success!'));
 
 router.post('/add', 
 	[
