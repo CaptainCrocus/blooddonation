@@ -43,6 +43,21 @@ router.post('/add',
 	}).save();
 */
 	res.redirect('/');
-})
+});
+
+router.get('/list', (req, res) => {
+	Person.find({}, function(err, docs){
+		if(err)
+			res.json({
+				success: false,
+				message: 'Wrong query'
+			});
+		else
+			res.json({
+				success: "true",
+				data: docs
+			});
+	});
+});
 
 module.exports = router;
