@@ -46,6 +46,7 @@ router.post('/add',
 });
 
 router.get('/list', (req, res) => {
+	console.log("Person List");
 	Person.find({}, function(err, docs){
 		if(err)
 			res.json({

@@ -41,6 +41,7 @@ app.set('view engine', 'handlebars');
 
 app.use(express.static(__dirname + '/public'));
 app.use(require('body-parser')());
+app.use(require('cors')());
 
 app.get('/', (req, res) => {
 	res.render('login');

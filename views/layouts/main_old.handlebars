@@ -9,19 +9,32 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/main.css">
-    <link href=/static/css/app.7a243b4459748e0fb989067a4b3a7618.css rel=stylesheet>
   </head>
   <body>
   	<div class="container-fluid">
-      <div id=app></div>
-      <script type=text/javascript src=/static/js/manifest.41edf4e5de72023e74fb.js>
-      </script><script type=text/javascript src=/static/js/vendor.beea1fca20bfb7c0e718.js>
-      </script><script type=text/javascript src=/static/js/app.c934902201943259ffac.js></script>
+	    {{{body}}}
 
 	    <!-- jQuery first, then Tether, then Bootstrap JS. -->
       <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+
+        <script type="text/javascript" src="/js/GridComp.js"></script>
+        <script type="text/javascript">
+          $(document).ready(function() {
+            var gridComp = new GridComp({
+              columns: ["#", "Имя", "Группа крови", "FIN"],
+              searchParams: [
+                {name: "firstName", label: "Имя"},
+                {name: "lastName", label: "Фамилия"},
+                {name: "fin", label: "FIN"}
+              ]
+            });
+            gridComp.initialize();
+          });
+        </script>
+
     </div>
   </body>
 </html>
