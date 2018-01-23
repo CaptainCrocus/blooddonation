@@ -11,7 +11,7 @@ var personSchema = mongoose.Schema({
     mobile: String,
     sex: String,
     description: String,
-    bloodType: String,
+    bloodType: Number,
     donor: Boolean,
     acceptor: Boolean
 }, { versionKey: false });

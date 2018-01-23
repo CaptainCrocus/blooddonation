@@ -6,27 +6,6 @@ const { matchedData, sanitize } = require('express-validator/filter');
 
 var Person = require('../models/person');
 
-router.post('/add', 
-	[
-		check('firstName').exists(),
-		check('lastName').exists(),
-		check('middleName').optional({ checkFalsy: true }),
-		check('passport').optional({ checkFalsy: true }),
-		check('fin').exists(),
-		check('address').optional({ checkFalsy: true }),
-		check('phone').optional({ checkFalsy: true }),
-		check('mobile').optional({ checkFalsy: true }),
-		check('sex').exists(),
-		check('bloodType').exists(),
-		check('description').optional({ checkFalsy: true }),
-	],
-	(req, res)=>{
-	const errors = validationResult(req)
-	var personInfo = matchedData(req);
-	console.log(personInfo);
-	Person.create(personInfo, (err, person)=>{
-		console.log(person);
-	});
 /*	new Person({
 		firstName: "Mamed",
 		lastName: "Mamedov",
@@ -42,23 +21,113 @@ router.post('/add',
 		acceptor: false
 	}).save();
 */
-	res.redirect('/');
-});
 
-router.get('/list', (req, res) => {
+// Fetch all persons
+router.get('/person', (req, res) => {
 	console.log("Person List");
 	Person.find({}, function(err, docs){
-		if(err)
+		if(err){
+			console.log("/person|get - error: ", error);
 			res.json({
 				success: false,
 				message: 'Wrong query'
 			});
-		else
+		}
+		else{
 			res.json({
 				success: "true",
 				data: docs
 			});
+		}
 	});
+});
+
+// Fetch single person
+router.get('/person/:id', (req, res)=>{
+	Person.findById(req.params.id, (err, person)=>{
+		if(err){
+			console.log("/person/:id|get - error: ", error);
+			res.json({
+				success: false,
+				message: 'Wrong query'
+			});
+		}
+		else{
+			res.json({
+				success: "true",
+				data: person
+			});
+		}
+	})
+});
+
+// Add person
+router.post('/person', 
+	[
+		check('firstName').exists(),
+		check('lastName').exists(),
+		check('middleName').optional({ checkFalsy: true }),
+		check('passport').optional({ checkFalsy: true }),
+		check('fin').exists(),
+		check('address').optional({ checkFalsy: true }),
+		check('phone').optional({ checkFalsy: true }),
+		check('mobile').optional({ checkFalsy: true }),
+		check('sex').exists(),
+		check('bloodType').exists(),
+		check('description').optional({ checkFalsy: true }),
+	],
+	(req, res)=>{
+		const errors = validationResult(req)
+		var personInfo = matchedData(req);
+		Person.create(personInfo, (err, person)=>{
+			if(err){
+				console.log("/person|post - error: ", err);
+				res.json({
+					success: false,
+					message: 'Wrong query'
+				});
+			}
+			else{
+				res.json({
+					success: "true",
+					data: person
+				});
+			}
+		});
+});
+
+// Add person
+router.put('/person/:id', 
+	[
+		check('firstName').exists(),
+		check('lastName').exists(),
+		check('middleName').optional({ checkFalsy: true }),
+		check('passport').optional({ checkFalsy: true }),
+		check('fin').exists(),
+		check('address').optional({ checkFalsy: true }),
+		check('phone').optional({ checkFalsy: true }),
+		check('mobile').optional({ checkFalsy: true }),
+		check('sex').exists(),
+		check('bloodType').exists(),
+		check('description').optional({ checkFalsy: true }),
+	],
+	(req, res)=>{
+		const errors = validationResult(req);
+		var personInfo = matchedData(req);
+		Person.updateOne({_id: req.params.id}, personInfo, (err, data)=>{
+			if(err){
+				console.log("/person|put - error: ", err);
+				res.json({
+					success: false,
+					message: 'Wrong query'
+				});
+			}
+			else{
+				res.json({
+					success: "true"
+				});
+			}
+		});
 });
 
 module.exports = router;

@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var credentials = require('./conf/credentials');
 
 var person = require('./controllers/person');
+var bloodtype = require('./controllers/bloodtype');
 var gui = require('./controllers/gui');
 
 var app = express();
@@ -49,6 +50,7 @@ app.get('/', (req, res) => {
 
 // Imported Routes
 app.use(gui);
-app.use('/api/person', person);
+app.use('/api', person);
+app.use('/api', bloodtype);
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
