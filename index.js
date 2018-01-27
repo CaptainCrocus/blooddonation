@@ -9,6 +9,7 @@ var credentials = require('./conf/credentials');
 
 var person = require('./controllers/person');
 var bloodtype = require('./controllers/bloodtype');
+var bloodsource = require('./controllers/bloodsource');
 var gui = require('./controllers/gui');
 
 var app = express();
@@ -52,5 +53,20 @@ app.get('/', (req, res) => {
 app.use(gui);
 app.use('/api', person);
 app.use('/api', bloodtype);
+app.use('/api', bloodsource);
+
+// пользовательская страница 404
+app.use(function(req, res){
+	res.type('text/plain');
+	res.status(404);
+	res.send('404 — Не найдено');
+});
+// пользовательская страница 500
+app.use(function(err, req, res, next){
+	console.error(err.stack);
+	res.type('text/plain');
+	res.status(500);
+	res.send('500 — Ошибка сервера');
+});
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));

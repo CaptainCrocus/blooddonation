@@ -24,7 +24,6 @@ var Person = require('../models/person');
 
 // Fetch all persons
 router.get('/person', (req, res) => {
-	console.log("Person List");
 	Person.find({}, function(err, docs){
 		if(err){
 			console.log("/person|get - error: ", error);
@@ -35,7 +34,7 @@ router.get('/person', (req, res) => {
 		}
 		else{
 			res.json({
-				success: "true",
+				success: true,
 				data: docs
 			});
 		}
@@ -44,9 +43,14 @@ router.get('/person', (req, res) => {
 
 // Fetch single person
 router.get('/person/:id', (req, res)=>{
+	if(req.params.id === "undefined" || !req.params.id){
+		return res.json({
+			success: false,
+			message: 'There is not the Person id'
+		});
+	}
 	Person.findById(req.params.id, (err, person)=>{
 		if(err){
-			console.log("/person/:id|get - error: ", error);
 			res.json({
 				success: false,
 				message: 'Wrong query'
@@ -54,7 +58,7 @@ router.get('/person/:id', (req, res)=>{
 		}
 		else{
 			res.json({
-				success: "true",
+				success: true,
 				data: person
 			});
 		}

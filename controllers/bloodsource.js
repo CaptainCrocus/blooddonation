@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-var BloodType = require('../models/bloodtype');
+var BloodSource = require('../models/bloodsource');
 
 // Fetch all blood types
-router.get('/bloodtype', (req, res) => {
-	BloodType.find({}, function(err, bloodtypes){
+router.get('/bloodsource', (req, res) => {
+	BloodSource.find({}, function(err, bloodsources){
 		if(err){
-			console.log("/bloodtype|get - error: ", err);
+			console.log("/bloodsource|get - error: ", err);
 			res.json({
 				success: false,
 				message: 'Wrong query'
@@ -16,7 +16,7 @@ router.get('/bloodtype', (req, res) => {
 		else{
 			res.json({
 				success: true,
-				data: bloodtypes
+				data: bloodsources
 			});
 		}
 	});
