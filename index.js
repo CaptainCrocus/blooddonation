@@ -10,6 +10,7 @@ var credentials = require('./conf/credentials');
 var person = require('./controllers/person');
 var bloodtype = require('./controllers/bloodtype');
 var bloodsource = require('./controllers/bloodsource');
+var blooddraw = require('./controllers/blooddraw');
 var gui = require('./controllers/gui');
 
 var app = express();
@@ -54,6 +55,7 @@ app.use(gui);
 app.use('/api', person);
 app.use('/api', bloodtype);
 app.use('/api', bloodsource);
+app.use('/api', blooddraw);
 
 // пользовательская страница 404
 app.use(function(req, res){

@@ -14,6 +14,7 @@ router.get('/bloodsource', (req, res) => {
 			});
 		}
 		else{
+			console.log(bloodsources);
 			res.json({
 				success: true,
 				data: bloodsources
