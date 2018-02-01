@@ -11,7 +11,7 @@ var personSchema = mongoose.Schema({
     mobile: String,
     sex: String,
     description: String,
-    bloodType: Number,
+    bloodType: { required: true, type: mongoose.Schema.Types.ObjectId, ref: 'BloodType' },
     donor: Boolean,
     acceptor: Boolean
 }, { versionKey: false });

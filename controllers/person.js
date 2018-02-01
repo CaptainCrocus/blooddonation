@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var tools = require('../lib/tools');
 
 const { check, validationResult } = require('express-validator/check');
 const { matchedData, sanitize } = require('express-validator/filter');
@@ -24,7 +25,7 @@ var Person = require('../models/person');
 
 // Fetch all persons
 router.get('/person', (req, res) => {
-	Person.find({}, function(err, docs){
+	Person.find({}).populate('bloodType').exec(function(err, persons){
 		if(err){
 			console.log("/person|get - error: ", error);
 			res.json({
@@ -32,10 +33,10 @@ router.get('/person', (req, res) => {
 				message: 'Wrong query'
 			});
 		}
-		else{
+		else{			
 			res.json({
 				success: true,
-				data: docs
+				data: persons
 			});
 		}
 	});
