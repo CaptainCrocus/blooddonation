@@ -30,7 +30,7 @@ router.get('/person', (req, res) => {
 			console.log("/person|get - error: ", error);
 			res.json({
 				success: false,
-				message: 'Wrong query'
+				errors: [{message: 'Wrong query'}]
 			});
 		}
 		else{			
@@ -69,11 +69,11 @@ router.get('/person/:id', (req, res)=>{
 // Add person
 router.post('/person', 
 	[
-		check('firstName').exists(),
-		check('lastName').exists(),
+		check('firstName').exists().isLength({ min: 2 }),
+		check('lastName').optional({ checkFalsy: true }),
 		check('middleName').optional({ checkFalsy: true }),
 		check('passport').optional({ checkFalsy: true }),
-		check('fin').exists(),
+		check('fin').exists().isLength({ min: 7 }),
 		check('address').optional({ checkFalsy: true }),
 		check('phone').optional({ checkFalsy: true }),
 		check('mobile').optional({ checkFalsy: true }),
@@ -82,14 +82,17 @@ router.post('/person',
 		check('description').optional({ checkFalsy: true }),
 	],
 	(req, res)=>{
-		const errors = validationResult(req)
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+    		return res.status(422).json({ errors: errors.mapped() });
+  		}
 		var personInfo = matchedData(req);
 		Person.create(personInfo, (err, person)=>{
 			if(err){
-				console.log("/person|post - error: ", err);
-				res.json({
+				console.log(err);
+				res.status(422).json({
 					success: false,
-					message: 'Wrong query'
+					errors: [{message: 'Data Base Error'}]
 				});
 			}
 			else{
