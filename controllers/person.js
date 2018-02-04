@@ -50,7 +50,7 @@ router.get('/person/:id', (req, res)=>{
 			message: 'There is not the Person id'
 		});
 	}
-	Person.findById(req.params.id, (err, person)=>{
+	Person.findById(req.params.id).populate('bloodType').exec(function(err, person){
 		if(err){
 			res.json({
 				success: false,
@@ -70,10 +70,10 @@ router.get('/person/:id', (req, res)=>{
 router.post('/person', 
 	[
 		check('firstName').exists().isLength({ min: 2 }),
-		check('lastName').optional({ checkFalsy: true }),
+		check('lastName').optional({ checkFalsy: true }).isLength({ min: 2 }),
 		check('middleName').optional({ checkFalsy: true }),
 		check('passport').optional({ checkFalsy: true }),
-		check('fin').exists().isLength({ min: 7 }),
+		check('fin').exists().isLength({ min: 7, max: 7 }),
 		check('address').optional({ checkFalsy: true }),
 		check('phone').optional({ checkFalsy: true }),
 		check('mobile').optional({ checkFalsy: true }),

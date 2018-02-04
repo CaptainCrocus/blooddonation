@@ -8,7 +8,11 @@ var BloodDraw = require('../models/blooddraw');
 
 // Fetch all blooddraws
 router.get('/blooddraw', (req, res) => {
-	BloodDraw.find({}).populate('person_id').exec(function(err, blooddraws){
+	BloodDraw.find({})
+	.populate('person')
+	.populate('bloodType')
+	.populate('source')
+	.exec(function(err, blooddraws){
 		if(err){
 			console.log("/person|get - error: ", error);
 			res.json({
@@ -54,15 +58,16 @@ router.get('/blooddraw/:id', (req, res)=>{
 router.post('/blooddraw', 
 	[
 		check('volume').exists(),
-		check('source_id').exists(),
-		check('person_id').exists(),
-		check('bloodType_id').exists(),
+		check('source').exists(),
+		check('person').exists(),
+		check('bloodType').exists(),
 		check('description').optional({ checkFalsy: true }),
 		check('date').exists()
 	],
 	(req, res)=>{
 		const errors = validationResult(req)
 		var blooddrawInfo = matchedData(req);
+		blooddrawInfo.remainder = blooddrawInfo.volume;
 		console.log(blooddrawInfo);
 		BloodDraw.create(blooddrawInfo, (err, blooddraw)=>{
 			if(err){
