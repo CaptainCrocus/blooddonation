@@ -9,8 +9,9 @@ var credentials = require('./conf/credentials');
 
 var person = require('./controllers/person');
 var bloodtype = require('./controllers/bloodtype');
-var bloodsource = require('./controllers/bloodsource');
-var blooddraw = require('./controllers/blooddraw');
+var source = require('./controllers/source');
+var draw = require('./controllers/draw');
+var transfusion = require('./controllers/transfusion');
 var gui = require('./controllers/gui');
 
 var app = express();
@@ -54,8 +55,9 @@ app.get('/', (req, res) => {
 app.use(gui);
 app.use('/api', person);
 app.use('/api', bloodtype);
-app.use('/api', bloodsource);
-app.use('/api', blooddraw);
+app.use('/api', source);
+app.use('/api', draw);
+app.use('/api', transfusion);
 
 // пользовательская страница 404
 app.use(function(req, res){

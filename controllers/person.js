@@ -7,22 +7,6 @@ const { matchedData, sanitize } = require('express-validator/filter');
 
 var Person = require('../models/person');
 
-/*	new Person({
-		firstName: "Mamed",
-		lastName: "Mamedov",
-		middleName: "Mamedovich",
-		passport: "AZ10223253355",
-		fin: "F548JU943",
-		address: "55, Heydar Alyev str.",
-		phone: "+994122583654",
-		mobile: "+994553652147",
-		sex: true,
-		description: "Some text about Mamed Mamedov",
-		donor: false,
-		acceptor: false
-	}).save();
-*/
-
 // Fetch all persons
 router.get('/person', (req, res) => {
 	Person.find({}).populate('bloodType').exec(function(err, persons){
@@ -51,6 +35,7 @@ router.get('/person/:id', (req, res)=>{
 		});
 	}
 	Person.findById(req.params.id).populate('bloodType').exec(function(err, person){
+		console.log(person);
 		if(err){
 			res.json({
 				success: false,

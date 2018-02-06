@@ -17,6 +17,7 @@
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
     "express-validator": "^4.3.0",
+    "moment": "^2.20.1",
     "mongoose": "^4.13.9"
   },
   "keywords": [

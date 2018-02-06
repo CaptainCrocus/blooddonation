@@ -13,7 +13,7 @@ var personSchema = mongoose.Schema({
     description: String,
     bloodType: { required: true, type: Number, ref: 'BloodType' },
     donor: Boolean,
-    acceptor: Boolean
+    recipient: Boolean
 }, { versionKey: false });
 
 var Person = mongoose.model('Person', personSchema, 'Person');
