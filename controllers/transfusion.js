@@ -5,15 +5,58 @@ const moment = require('moment');
 const { check, validationResult } = require('express-validator/check');
 const { matchedData, sanitize } = require('express-validator/filter');
 
-var Draw = require('../models/draw');
 var Transfusion = require('../models/transfusion');
+var Draw = require('../models/draw');
 var Person = require('../models/person');
 
 // Fetch all transfusions
 router.get('/trans', (req, res) => {
-	res.json({
-		success: true,
-		data: "Not realized yet"
+	Transfusion.aggregate([
+		{$match: {}},
+		{
+			$project: {
+				volume: 1,
+				date: 1,
+				source: 1,
+				bloodType: 1,
+				draw: 1,
+				recipient: 1,
+				description: 1
+			}
+		},
+		{ $lookup: { from: 'Draw', localField: 'draw', foreignField: '_id', as: 'draw' }},
+		{ $unwind: '$draw'},
+		{ $lookup: { from: 'Person', localField: 'draw.person', foreignField: '_id', as: 'draw.person' }},
+		{ $unwind: '$draw.person'},
+		{ $lookup: { from: 'Person', localField: 'recipient', foreignField: '_id', as: 'recipient' }},
+		{ $unwind: '$recipient'},
+		{ 
+			$lookup: { 
+				from: 'BloodType', 
+				localField: 'recipient.bloodType', 
+				foreignField: '_id', 
+				as: 'recipient.bloodType' 
+			}
+		},
+		{ $unwind: '$recipient.bloodType'},
+	])
+	.lookup({ from: 'Source', localField: 'source', foreignField: '_id', as: 'source' })
+	.lookup({ from: 'BloodType', localField: 'bloodType', foreignField: '_id', as: 'bloodType' })
+	.unwind('source', 'bloodType')
+	.exec((err, trans) => {
+		if(err){
+			console.log("/person|get - error: ", err);
+			res.json({
+				success: false,
+				message: 'Wrong query'
+			});
+		}
+		else{
+			res.json({
+				success: true,
+				data: trans
+			});
+		}
 	});
 });
 
@@ -39,6 +82,7 @@ router.post('/trans',
 	const errors = validationResult(req)
 	var transInfo = matchedData(req);
 
+	console.log(transInfo);
 	try{
 		let draw = await Draw.findOne({_id: transInfo.draw}).lean();
 		if(transInfo.volume > draw.remainder){
@@ -69,7 +113,8 @@ router.post('/trans',
 		}
 		res.json({
 			success: false,
-			message: message
+			message: message,
+			type: err.name
 		});
 	}
 });

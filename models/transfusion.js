@@ -14,6 +14,7 @@ var transfusionSchema = mongoose.Schema({
 transfusionSchema.post('aggregate', function(transfusions, next){
 	transfusions.forEach(transfusion => {
 		transfusion.date = moment(transfusion.date).locale('ru').format('DD.MM.YYYY HH:mm');
+		transfusion.draw.date = moment(transfusion.draw.date).locale('ru').format('DD.MM.YYYY HH:mm');
 	});
 	next();
 });

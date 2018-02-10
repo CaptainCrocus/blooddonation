@@ -38,6 +38,7 @@ router.get('/person', async (req, res) => {
 		.skip(offset)
 		.limit(limit).populate('bloodType')
 		.sort({bloodType: 1, firstName: 1});
+		
 		const count = await Person.count(findObj);
 
 		res.json({
