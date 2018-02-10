@@ -88,7 +88,7 @@ router.post('/draw',
 		var drawInfo = matchedData(req);
 
 		drawInfo.remainder = drawInfo.volume;
-
+		console.log('drawInfo:', drawInfo);
 		var draw = new Draw(drawInfo);
 		draw.save(drawInfo, (err, draw)=>{
 			if(err){

@@ -16,6 +16,12 @@ var personSchema = mongoose.Schema({
     recipient: Boolean
 }, { versionKey: false });
 
+/*personSchema.index({
+    firstName: 'text', 
+    lastName: 'text'
+});
+*/
+
 var Person = mongoose.model('Person', personSchema, 'Person');
 
 module.exports = Person;

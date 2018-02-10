@@ -8,17 +8,18 @@ var drawSchema = mongoose.Schema({
 	bloodType: { required: true, type: Number, ref: 'BloodType' },
 	remainder: { required: true, type: Number},
 	date: { required: true, type: Date},
+	description: { type: String}
 }, { versionKey: false });
 
 drawSchema.post('aggregate', function(draws, next){
 	draws.forEach(draw => {
-		draw.date = moment(draw.date).locale('ru').format('DD.MM.YYYY');
+		draw.date = moment(draw.date).locale('ru').format('DD.MM.YYYY HH:mm');
 	});
 	next();
 });
 
 drawSchema.post('findOne', function(draw, next){
-	draw.date = moment(draw.date).locale('ru').format('DD.MM.YYYY');
+	draw.date = moment(draw.date).locale('ru').format('DD.MM.YYYY HH:mm');
 	next();
 });
 

@@ -8,11 +8,12 @@ var transfusionSchema = mongoose.Schema({
 	recipient: { required: true, type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
 	bloodType: { required: true, type: Number, ref: 'BloodType' },
 	date: { required: true, type: Date},
+	description: { type: String }
 }, { versionKey: false });
 
 transfusionSchema.post('aggregate', function(transfusions, next){
 	transfusions.forEach(transfusion => {
-		transfusion.date = moment(transfusion.date).locale('ru').format('DD.MM.YYYY');
+		transfusion.date = moment(transfusion.date).locale('ru').format('DD.MM.YYYY HH:mm');
 	});
 	next();
 });

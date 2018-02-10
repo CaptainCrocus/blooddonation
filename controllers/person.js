@@ -1,6 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var tools = require('../lib/tools');
+const express = require('express');
+const router = express.Router();
+const tools = require('../lib/tools');
+const util = require('util');
 
 const { check, validationResult } = require('express-validator/check');
 const { matchedData, sanitize } = require('express-validator/filter');
@@ -8,22 +9,51 @@ const { matchedData, sanitize } = require('express-validator/filter');
 var Person = require('../models/person');
 
 // Fetch all persons
-router.get('/person', (req, res) => {
-	Person.find({}).populate('bloodType').exec(function(err, persons){
-		if(err){
-			console.log("/person|get - error: ", error);
-			res.json({
-				success: false,
-				errors: [{message: 'Wrong query'}]
-			});
-		}
-		else{			
-			res.json({
-				success: true,
-				data: persons
-			});
-		}
-	});
+router.get('/person', async (req, res) => {
+
+	let limit = parseInt(req.query.pageSize);
+	limit = (limit !== NaN && Number.isInteger(limit)) ? limit : 10;
+
+	const name = new RegExp(req.query.name, 'i');
+	const fin = new RegExp(req.query.fin, 'i');
+
+	let bloodType = parseInt(req.query.bloodType);
+	bloodType = (bloodType !== NaN && Number.isInteger(bloodType)) ? bloodType : '';
+
+	let offset = parseInt(req.query.offset);
+	offset = (offset !== NaN) ? offset : 0; 
+
+	const findObj = {
+		$and: [
+			{ fin: fin},
+			{ $or: [{firstName: name}, {lastName: name}] }
+		]
+	};
+	if(bloodType !== ''){
+		findObj.$and.push({bloodType: bloodType});
+	}
+
+	try{
+		const response = await Person.find(findObj)
+		.skip(offset)
+		.limit(limit).populate('bloodType')
+		.sort({bloodType: 1, firstName: 1});
+		const count = await Person.count(findObj);
+
+		res.json({
+			success: true,
+			data: response,
+			totalCount: count,
+			pageSize: limit,
+			offset: offset
+		});
+	} catch(error) {
+		console.log("/person|get - error: ", error);
+		res.json({
+			success: false,
+			errors: [{message: 'Wrong query'}]
+		});
+	}
 });
 
 // Fetch single person
