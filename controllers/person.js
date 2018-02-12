@@ -66,7 +66,6 @@ router.get('/person/:id', (req, res)=>{
 		});
 	}
 	Person.findById(req.params.id).populate('bloodType').exec(function(err, person){
-		console.log(person);
 		if(err){
 			res.json({
 				success: false,
@@ -112,6 +111,7 @@ router.post('/person',
 				});
 			}
 			else{
+		  		res.set('Location', '/person/show/' +person._id);
 				res.json({
 					success: "true",
 					data: person
