@@ -61,16 +61,17 @@ app.use('/api', transfusion);
 
 // пользовательская страница 404
 app.use(function(req, res){
-	res.type('text/plain');
-	res.status(404);
-	res.send('404 — Не найдено');
+	// res.type('text/plain');
+	// res.status(404);
+	//res.send('404 — Не найдено');
+	res.redirect(308, '/');
 });
 // пользовательская страница 500
 app.use(function(err, req, res, next){
 	console.error(err.stack);
-	// res.type('text/plain');
-	// res.status(500);
-	res.redirect(308, '/');
+	res.type('text/plain');
+	res.status(500);
+	res.send('500 — Ошибка сервера');
 });
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
