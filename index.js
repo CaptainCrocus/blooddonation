@@ -68,9 +68,9 @@ app.use(function(req, res){
 // пользовательская страница 500
 app.use(function(err, req, res, next){
 	console.error(err.stack);
-	res.type('text/plain');
-	res.status(500);
-	res.send('500 — Ошибка сервера');
+	// res.type('text/plain');
+	// res.status(500);
+	res.redirect(308, '/');
 });
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
