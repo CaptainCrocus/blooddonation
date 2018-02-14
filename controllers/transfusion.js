@@ -62,10 +62,32 @@ router.get('/trans', (req, res) => {
 
 // Fetch single transfusion
 router.get('/trans/:id', (req, res)=>{
-	res.json({
-		success: true,
-		data: draw
-	});
+	if(req.params.id === "undefined" || !req.params.id){
+		return res.json({
+			success: false,
+			message: 'There is not the Trans id'
+		});
+	}
+	Transfusion.findOne({_id: req.params.id})
+	.populate('bloodType')
+	.populate('source')
+	.populate({ path: 'draw', populate: { path: 'person'}})
+	.populate('recipient')
+	.lean()
+	.exec(function(err, draw){
+		if(err){
+			res.json({
+				success: false,
+				message: 'Wrong query'
+			});
+		}
+		else{
+			res.json({
+				success: true,
+				data: draw
+			});
+		}
+	})
 });
 
 // Add transfusion
@@ -79,11 +101,16 @@ router.post('/trans',
 		check('description').optional({ checkFalsy: true }),
 		check('date').exists()
 	], async (req, res)=>{
-	const errors = validationResult(req)
-	var transInfo = matchedData(req);
-
-	console.log(transInfo);
+	
 	try{
+		const errors = validationResult(req)
+		var transInfo = matchedData(req);
+
+		transInfo.date = moment(transInfo.date, "DD.MM.YYYY HH:mm");
+		if (!errors.isEmpty()) {
+    		return res.status(422).json({ errors: errors.mapped() });
+  		}
+
 		let draw = await Draw.findOne({_id: transInfo.draw}).lean();
 		if(transInfo.volume > draw.remainder){
 			throw new RangeError('The transfusion volume is greater than draw volume');
@@ -105,10 +132,11 @@ router.post('/trans',
 			data: createdTrans
 		});		  						
 	} catch(err){
-
+		
 		let message = "Data Base Error";
 		
-		if(err.name = 'RangeError'){
+		if(err.name == 'RangeError'){
+			console.log(err);
 			message = err.message;
 		}
 		res.json({

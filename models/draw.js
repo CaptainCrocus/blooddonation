@@ -19,7 +19,8 @@ drawSchema.post('aggregate', function(draws, next){
 });
 
 drawSchema.post('findOne', function(draw, next){
-	draw.date = moment(draw.date).locale('ru').format('DD.MM.YYYY HH:mm');
+	if(draw)
+		draw.date = moment(draw.date).locale('ru').format('DD.MM.YYYY HH:mm');
 	next();
 });
 

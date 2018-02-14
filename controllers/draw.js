@@ -87,6 +87,9 @@ router.post('/draw',
 		const errors = validationResult(req)
 		var drawInfo = matchedData(req);
 
+		// TODO: использовать валидаторы схемы
+		drawInfo.date = moment(drawInfo.date, "DD.MM.YYYY HH:mm");
+		
 		drawInfo.remainder = drawInfo.volume;
 		var draw = new Draw(drawInfo);
 		draw.save(drawInfo, (err, draw)=>{
@@ -105,16 +108,14 @@ router.post('/draw',
 				 	else{
 				 		if(!person.donor){		 			
 		  					person.donor = true;
-		  					person.save((err, person)=>{
-		  						res.set('Location', 'http://localhost:8080/draw/show/' +draw._id);
-								res.json({
-									success: "true",
-									data: draw
-								});		  						
-		  					});
+							person.save();
 				 		}
 				 	}
 				});
+				res.json({
+					success: "true",
+					data: draw
+				});		  						
 			}
 		});
 });

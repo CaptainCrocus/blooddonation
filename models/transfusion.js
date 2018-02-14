@@ -18,6 +18,13 @@ transfusionSchema.post('aggregate', function(transfusions, next){
 	});
 	next();
 });
+
+transfusionSchema.post('findOne', function(trans, next){
+	trans.date = moment(trans.date).format('DD.MM.YYYY HH:mm');
+	trans.draw.date = moment(trans.draw.date).format('DD.MM.YYYY HH:mm');
+	next();
+});
+
 var Transfusion = mongoose.model('Transfusion', transfusionSchema, 'Transfusion');
 
 module.exports = Transfusion;
