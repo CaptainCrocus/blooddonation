@@ -32,12 +32,24 @@ router.get('/person', async (req, res) => {
 	if(bloodType !== ''){
 		findObj.$and.push({bloodType: bloodType});
 	}
+	if(req.query.sex && ( req.query.sex === 'male' || req.query.sex === 'female')){
+		findObj.$and.push({sex: req.query.sex});
+	}
+
+	let sortObj = {};
+	let sortFromReq = JSON.parse(req.query.sortObj);
+	if(sortFromReq){
+		if(undefined !== sortFromReq.fullName && sortFromReq.fullName !== null)
+			sortObj.firstName = (sortFromReq.fullName) ? -1 : 1;
+		if(undefined !== sortFromReq.bloodType && sortFromReq.bloodType !== null)
+			sortObj.bloodType = (sortFromReq.bloodType) ? -1 : 1;
+	}
 
 	try{
 		const response = await Person.find(findObj)
-		.skip(offset)
-		.limit(limit).populate('bloodType')
-		.sort({bloodType: 1, firstName: 1});
+			.sort(sortObj)
+			.skip(offset)
+			.limit(limit).populate('bloodType');
 		
 		const count = await Person.count(findObj);
 
@@ -49,6 +61,7 @@ router.get('/person', async (req, res) => {
 			offset: offset
 		});
 	} catch(error) {
+		console.log(error.name);
 		console.log("/person|get - error: ", error);
 		res.json({
 			success: false,
