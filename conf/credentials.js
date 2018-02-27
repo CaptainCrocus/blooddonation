@@ -1,4 +1,5 @@
 module.exports = {
+	cookieSecret: 'MoPnoWBPhm',
 	mongo: {
 		development: {
 			connectionString: 'mongodb://localhost:27017/blooddonor',

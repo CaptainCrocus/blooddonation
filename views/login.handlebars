@@ -1,15 +1,22 @@
 <section>
-	<h1>Логин страница</h1>
-	<div>
-		<form>
-		  <div class="form-group">
-		    <label for="formGroupExampleInput">Логин</label>
-		    <input type="text" class="form-control" id="formGroupExampleInput" placeholder="логин">
-		  </div>
-		  <div class="form-group">
-		    <label for="formGroupExampleInput2">Пароль</label>
-		    <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="пароль">
-		  </div>
-		</form>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-md-4 offset-md-4">
+				<h1>Войти</h1>
+				<div class="account-wall">
+					<form class="form-signin" action="/login" method="POST">
+					  <div class="form-group">
+					    <label for="username">Логин</label>
+					    <input type="text" class="form-control" id="username" name="username">
+					  </div>
+					  <div class="form-group">
+					    <label for="password">Пароль</label>
+					    <input type="password" class="form-control" id="password" name="password">
+					  </div>
+					  <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+					</form>									
+				</div>
+			</div>
+		</div>
 	</div>
 </section>
