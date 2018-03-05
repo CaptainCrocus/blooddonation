@@ -18,6 +18,19 @@ var credentials = require('./conf/credentials');
 
 var app = express();
 
+app.use(function(req, res, next) {
+	console.log(req.headers.origin);
+	res.header('Access-Control-Allow-Credentials', true);
+	res.header('Access-Control-Allow-Origin', req.headers.origin);
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+	res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+	if ('OPTIONS' == req.method) {
+		res.send(200);
+	} else {
+		next();
+	}
+});
+
 /// База данных ////////////////////////////////////////////////////////////////
 opts = { 
 	useMongoClient: true,
@@ -56,7 +69,6 @@ app.set('view engine', 'handlebars');
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-app.use(require('cors')());
 
  // Using the flash middleware provided by connect-flash to store messages in session
  // and displaying in templates
@@ -68,20 +80,7 @@ var initPassport = require('./passport/init');
 initPassport(passport);
 
 // Imported Routes
-
-var person = require('./controllers/person');
-var bloodtype = require('./controllers/bloodtype');
-var source = require('./controllers/source');
-var draw = require('./controllers/draw');
-var transfusion = require('./controllers/transfusion');
-var gui = require('./controllers/gui')(passport);
-
-app.use(gui);
-app.use('/api', person);
-app.use('/api', bloodtype);
-app.use('/api', source);
-app.use('/api', draw);
-app.use('/api', transfusion);
+app.use(require('./controllers')(passport));
 
 // пользовательская страница 404
 app.use(function(req, res){

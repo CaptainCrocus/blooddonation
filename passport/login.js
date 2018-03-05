@@ -11,7 +11,6 @@ module.exports = function(passport){
             // check in mongo if a user with username exists or not
             User.findOne({ 'username' :  username }, 
                 function(err, user) {
-                    console.log(username);
                     // In case of any error, return using the done method
                     if (err)
                         return done(err);
