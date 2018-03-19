@@ -19,7 +19,6 @@ var credentials = require('./conf/credentials');
 var app = express();
 
 app.use(function(req, res, next) {
-	console.log(req.headers.origin);
 	res.header('Access-Control-Allow-Credentials', true);
 	res.header('Access-Control-Allow-Origin', req.headers.origin);
 	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
