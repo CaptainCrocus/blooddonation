@@ -37,6 +37,12 @@ module.exports = function(){
 		if(req.query.sex && ( req.query.sex === 'male' || req.query.sex === 'female')){
 			findObj.$and.push({sex: req.query.sex});
 		}
+		if(req.query.donor){
+			findObj.$and.push({donor: req.query.donor});
+		}
+		if(req.query.recipient){
+			findObj.$and.push({recipient: req.query.recipient});
+		}
 
 		let sortObj = {};
 		let sortFromReq = JSON.parse(req.query.sortObj);

@@ -11,7 +11,7 @@ var drawSchema = mongoose.Schema({
 	description: { type: String}
 }, { versionKey: false });
 
-drawSchema.post('aggregate', function(draws, next){
+drawSchema.post('find', function(draws, next){
 	draws.forEach(draw => {
 		draw.date = moment(draw.date).locale('ru').format('DD.MM.YYYY HH:mm');
 	});

@@ -10,39 +10,86 @@ var Person = require('../models/person');
 
 module.exports = function(){
 	// Fetch all draws
-	router.get('/', (req, res) => {
-		Draw.aggregate([
-			{$match: {}},
-			{
-				$project: {
-					volume: 1,
-					remainder: 1,
-					date: 1,
-					source: 1,
-					person: 1,
-					bloodType: 1
-				}
-			}
-		])
-		.lookup({ from: 'Source', localField: 'source', foreignField: '_id', as: 'source' })
-		.lookup({ from: 'Person', localField: 'person', foreignField: '_id', as: 'person' })
-		.lookup({ from: 'BloodType', localField: 'bloodType', foreignField: '_id', as: 'bloodType' })
-		.unwind('source', 'person', 'bloodType')
-		.exec((err, draws) => {
-			if(err){
-				console.log("/person|get - error: ", err);
-				res.json({
-					success: false,
-					message: 'Wrong query'
+	router.get('/', async (req, res) => {
+		let limit = parseInt(req.query.pageSize);
+		limit = (limit !== NaN && Number.isInteger(limit)) ? limit : 10;
+
+		const findObj = {
+			$and: [
+			]
+		};
+
+		let date = req.query.date !== undefined ? req.query.date : null;
+
+		if(moment(date).isValid()){
+			const start = moment(date).format();
+			const end = moment(date).add(1, 'd').format();
+			findObj.$and.push({date: {$gte: start, $lt: end}});
+		}
+
+		let bloodType = parseInt(req.query.bloodType);
+		bloodType = (bloodType !== NaN && Number.isInteger(bloodType)) ? bloodType : null;
+
+		if(bloodType !== null){
+			findObj.$and.push({bloodType: bloodType});
+		}
+		
+		let source = (req.query.source !== undefined) ? req.query.source : null;
+
+		if(source !== null){
+			findObj.$and.push({source: source});
+		}
+
+		let offset = parseInt(req.query.offset);
+		offset = (offset !== NaN) ? offset : 0; 
+
+		let sortObj = {};
+		let sortFromReq = JSON.parse(req.query.sortObj);
+		if(sortFromReq){
+			if(undefined !== sortFromReq.date && sortFromReq.date !== null)
+				sortObj.date = (sortFromReq.date) ? -1 : 1;
+		}
+
+		try{
+			if(undefined !== req.query.person && req.query.person !== ''){
+				const person = new RegExp(req.query.person, 'i');
+				const persons = await Person.find({ 
+					$or: [{firstName: person}, {lastName: person}] 
+				})
+				.lean();
+
+				persons_ids = persons.map(function(person) {
+  					return person._id
 				});
+
+				findObj.$and.push({person: {$in: persons_ids}});
 			}
-			else{
-				res.json({
-					success: true,
-					data: draws
-				});
-			}
-		});
+
+			const response = await Draw.find(findObj.$and.length ? findObj : {})
+				.sort(sortObj)
+				.skip(offset)
+				.limit(limit)
+				.populate('source')
+				.populate('bloodType')
+				.populate('person')
+				.lean();
+			
+			const count = await Draw.count(findObj.$and.length ? findObj : {});
+
+			res.json({
+				success: true,
+				data: response,
+				totalCount: count,
+				pageSize: limit,
+				offset: offset
+			});
+		} catch(error) {
+			console.log("/draw|get - error: ", error);
+			res.json({
+				success: false,
+				errors: [{message: 'Wrong query'}]
+			});
+		}
 	});
 
 	// Fetch single draw
