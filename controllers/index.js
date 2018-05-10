@@ -18,11 +18,11 @@ module.exports = function(passport){
 	const transfusion = require('./transfusion')();
 
 	router.use(gui);
-	router.use('/api/person', isAuthenticated, person);
-	router.use('/api/bloodtype', isAuthenticated, bloodtype);
-	router.use('/api/source', isAuthenticated, source);
-	router.use('/api/draw', isAuthenticated, draw);
-	router.use('/api/trans', isAuthenticated, transfusion);
+	router.use('/api/person', /*isAuthenticated,*/ person);
+	router.use('/api/bloodtype', /*isAuthenticated,*/ bloodtype);
+	router.use('/api/source', /*isAuthenticated,*/ source);
+	router.use('/api/draw', /*isAuthenticated,*/ draw);
+	router.use('/api/trans', /*isAuthenticated,*/ transfusion);
 
 	return router
 };

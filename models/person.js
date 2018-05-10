@@ -9,6 +9,7 @@ var personSchema = mongoose.Schema({
     address: String,
     phone: String,
     mobile: String,
+    email: String,
     sex: { required: true, enum: ['male', 'female'], type: String},
     description: String,
     bloodType: { required: true, type: Number, ref: 'BloodType' },

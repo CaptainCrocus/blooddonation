@@ -42,6 +42,10 @@ module.exports = function(){
 			findObj.$and.push({source: source});
 		}
 
+		if(req.query.personId != null){
+			findObj.$and.push({recipient: req.query.personId});
+		}
+
 		let offset = parseInt(req.query.offset);
 		offset = (offset !== NaN) ? offset : 0; 
 

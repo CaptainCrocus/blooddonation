@@ -112,8 +112,14 @@ module.exports = function(){
 			check('address').optional({ checkFalsy: true }),
 			check('phone').optional({ checkFalsy: true }),
 			check('mobile').optional({ checkFalsy: true }),
+			check('email')
+				.optional({ checkFalsy: true })
+				.isEmail()
+				.trim()
+				.normalizeEmail(),
 			check('sex').exists(),
 			check('bloodType').exists(),
+			check('donor').optional({ checkFalsy: true }),
 			check('description').optional({ checkFalsy: true }),
 		],
 		(req, res)=>{
@@ -127,7 +133,7 @@ module.exports = function(){
 					console.log(err);
 					res.status(422).json({
 						success: false,
-						errors: [{message: 'Data Base Error'}]
+						errors: [{type: err.type, message: err.message}]
 					});
 				}
 				else{
