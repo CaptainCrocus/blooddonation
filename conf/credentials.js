@@ -5,7 +5,7 @@ module.exports = {
 			connectionString: 'mongodb://localhost:27017/blooddonor',
 		},
 		production: {
-			connectionString: 'mongodb://blood:blood@ds151207.mlab.com:51207/heroku_mf2mgkt8',
+			connectionString: process.env.MONGODB_URI_BLOODDONOR,
 		}
 	}
 };
